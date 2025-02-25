@@ -1,18 +1,21 @@
 class gamemanager {
     constructor(game) {
         this.game = game;
+        this.game.manager = this;
         this.currentTurn = 0;
-        this.player = new playablePlayer;
+        this.player = new playablePlayer(this.game, 250,250);
         this.currentPlayer = null;
         this.numberOfPlayers = 4;
         this.deck = [];
         this.discard = [];
         this.players = [];
-        for(let i = 0; i < this.numberOfPlayers; i++) {
-            this.players.push(new player(this.game, i, i));
+        for(let i = 0; i < this.numberOfPlayers-1; i++) {
+            let newplayer = new player(this.game, i, i);
+            this.players.push(newplayer);
         }
         
         this.players.push(this.player);
+
         for(let i = 0; i < 4; i++) {
 
             for(let j = 0; j < 12; j++) {
@@ -31,25 +34,40 @@ class gamemanager {
                 }
             }
         }
-        console.log(this.deck);
-        this.player.currentHand.push(this.deck.pop());
-        this.player.currentHand.push(this.deck.pop());
-        this.player.currentHand.push(this.deck.pop());
-        this.player.currentHand.push(this.deck.pop());
-        this.player.currentHand.push(this.deck[12]);
-        this.player.currentHand.push(this.deck[13]);
-        this.player.currentHand.push(this.deck[5]);
-        this.game.addEntity(this.player);
-        this.currentCard = this.deck.pop();
-        
+        for(let i = 0; i < this.numberOfPlayers; i++) {
+            for(let j = 0; j < 7; j++) {
+                let currentCard = this.deck.pop();
+                this.players[i].currentHand.push(currentCard);
+                if(this.players[i] instanceof playablePlayer) {
+                    console.log(currentCard);
+                    this.players[i].buttons.push(new button(this.players[i], 100+((j*75)+15), 600, currentCard.width, currentCard.height, 1.5));
+                    console.log(this.players[i].buttons[j]);
+                }
+            }
+            console.log(`Player hand dealt: ${this.players[i]} hand length: ${this.players[i].currentHand.length}`);
+        }
+
+        for(let i = 0; i < this.numberOfPlayers; i++) {
+            this.game.addEntity(this.players[i]);
+            console.log("player added");
+        }
+        this.discard.push(this.deck.pop());
     }
 
     createPlayers() {
 
     }
 
+    update() {
+
+    }
+
     draw(ctx) {
-         
+         ctx.fillStyle = "black";
+         ctx.font = "14px Arial";
+         ctx.fillText(`entities: ${this.game.entities.length}`, 10, 600);
+         ctx.drawImage(this.discard[this.discard.length - 1].cardImage, this.discard[this.discard.length - 1].x, this.discard[this.discard.length - 1].y, this.discard[this.discard.length - 1].width, 
+            this.discard[this.discard.length - 1].height, 200, 200, this.discard[this.discard.length - 1].width*1.5, this.discard[this.discard.length - 1].height*1.5); 
     }
 
 

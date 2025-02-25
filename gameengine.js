@@ -11,8 +11,10 @@ class GameEngine {
 
         // Information on the input
         this.click = null;
-        this.mouse = null;
+        this.mousepressed = null;
+        this.mouse = {x:0, y:0};
         this.wheel = null;
+        this.manager = null;
         this.keys = {};
 
         // Options and the Details
@@ -53,7 +55,39 @@ class GameEngine {
             if (this.options.debugging) {
                 console.log("CLICK", getXandY(e));
             }
-            this.click = getXandY(e);
+            console.log("click");
+            if(this.entities.length > 0) {
+                let player = this.manager.player;
+                for(let i = 0; i < player.currentHand.length; i++) {     
+                   
+                    if(player.buttons[i].collide()) {
+                        let currentCard = player.currentHand[i];
+                        let currentPlayingCard = this.manager.discard[this.manager.discard.length - 1]
+                        if(currentCard.color == currentPlayingCard.color || currentCard.value == currentPlayingCard.value) {
+                            this.manager.discard.push(currentCard);
+                            player.currentHand.splice(i,1);
+                            player.buttons.pop();
+                        }
+                    }
+                }
+        
+                if(player.drawButton.collide() && this.manager.deck.length > 0) {
+                    let currentCard = this.manager.deck.pop();
+                    player.currentHand.push(currentCard);
+                    player.buttons.push(new button(player, 100+(((player.buttons.length)*75)+15), 600, currentCard.width, currentCard.height, 1.5));
+                }
+                
+            }
+            
+            
+        });
+
+        this.ctx.canvas.addEventListener("mouseup", e => {
+            if (this.options.debugging) {
+                console.log("UP", getXandY(e));
+            }
+            console.log("UP");
+            this.click = true;
         });
 
         this.ctx.canvas.addEventListener("wheel", e => {
@@ -71,7 +105,6 @@ class GameEngine {
             e.preventDefault(); // Prevent Context Menu
             this.rightclick = getXandY(e);
         });
-
         this.ctx.canvas.addEventListener("keydown", event => this.keys[event.key] = true);
         this.ctx.canvas.addEventListener("keyup", event => this.keys[event.key] = false);
     };
@@ -83,16 +116,18 @@ class GameEngine {
     draw() {
         // Clear the whole canvas with transparent color (rgba(0, 0, 0, 0))
         this.ctx.clearRect(0, 0, this.ctx.canvas.width, this.ctx.canvas.height);
-
         // Draw latest things first
         for (let i = this.entities.length - 1; i >= 0; i--) {
-            this.entities[i].draw(this.ctx, this);
+            this.entities[i].draw(this.ctx);
         }
+        this.manager.draw(this.ctx);
+        this.ctx.fillText(this.click, 50,50);
+
+        
     };
 
     update() {
         let entitiesCount = this.entities.length;
-
         for (let i = 0; i < entitiesCount; i++) {
             let entity = this.entities[i];
 

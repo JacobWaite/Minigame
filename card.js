@@ -9,4 +9,7 @@ class card {
     draw(ctx) {
         
     }
+    toString() {
+        return `Card: ${this.color} ${this.value}`;
+    }
 }
