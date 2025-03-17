@@ -1,7 +1,7 @@
 class playablePlayer extends player {
     constructor(game, x, y) {
         super(game, x, y);
-        console.log(`Playable Player created ${this}`);
+        //console.log(`Playable Player created ${this}`);
         this.buttons = [];
         this.currentCard = null;
         this.drawButton = new button(this, 350, 350, 35, 55, 1.5);

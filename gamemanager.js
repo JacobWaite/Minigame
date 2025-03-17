@@ -20,7 +20,7 @@ class gamemanager {
             this.players.push(newplayer);
         }
         
-        console.log(this.players);
+        //console.log(this.players);
         for(let i = 0; i < 4; i++) {
 
             for(let j = 0; j < 13; j++) {
@@ -45,20 +45,20 @@ class gamemanager {
                 let currentCard = this.deck.pop();
                 this.players[i].currentHand.push(currentCard);
                 if(this.players[i] instanceof playablePlayer) {
-                    console.log(currentCard);
+                    //console.log(currentCard);
                     this.players[i].buttons.push(new button(this.players[i], 100+((j*75)+15), 600, currentCard.width, currentCard.height, 1.5));
-                    console.log(this.players[i].buttons[j]);
+                    //console.log(this.players[i].buttons[j]);
                 }
             }
-            console.log(`Player hand dealt: ${this.players[i]} hand length: ${this.players[i].currentHand.length}`);
+            //console.log(`Player hand dealt: ${this.players[i]} hand length: ${this.players[i].currentHand.length}`);
         }
 
         for(let i = 0; i < this.numberOfPlayers; i++) {
             this.game.addEntity(this.players[i]);
-            console.log("player added");
+            //console.log("player added");
         }
         this.discard(this.deck.pop());
-        console.log(this.discardPile);
+        //console.log(this.discardPile);
     }
 
     createPlayers() {
@@ -142,16 +142,16 @@ class gamemanager {
         } else if(this.currentTurn < 0) {
             this.currentTurn = this.numberOfPlayers - 1;
         }
-        console.log(`player: ${this.currentTurn} was skipped`);
+        //console.log(`player: ${this.currentTurn} was skipped`);
 
       }
       
       draw2() {        
-        console.log(`draw 2 player: ${this.currentTurn}`);
-        console.log(`player: ${this.currentTurn} deck before: ${this.players[this.currentTurn].currentHand}`);
+        //console.log(`draw 2 player: ${this.currentTurn}`);
+        //console.log(`player: ${this.currentTurn} deck before: ${this.players[this.currentTurn].currentHand}`);
         this.players[this.currentTurn].currentHand.push(this.drawCard());
         this.players[this.currentTurn].currentHand.push(this.drawCard());
-        console.log(`player: ${this.currentTurn} deck is now: ${this.players[this.currentTurn].currentHand}`);
+        //console.log(`player: ${this.currentTurn} deck is now: ${this.players[this.currentTurn].currentHand}`);
 
         this.skipturn();
       }
@@ -160,10 +160,9 @@ class gamemanager {
     draw(ctx) {
          ctx.fillStyle = "black";
          ctx.font = "14px Arial";
-         ctx.fillText(`entities: ${this.game.entities.length}`, 10, 600);
-         ctx.fillText(`currentPlayer: ${this.currentTurn} ${this.players[this.currentTurn]}`, 10, 610);
-         ctx.fillText(`reversed: ${this.reversed}`, 10, 620);
-         ctx.strokeRect(0,0,10,10);
+         //ctx.fillText(`entities: ${this.game.entities.length}`, 10, 600);
+         //ctx.fillText(`currentPlayer: ${this.currentTurn} ${this.players[this.currentTurn]}`, 10, 610);
+         //ctx.fillText(`reversed: ${this.reversed}`, 10, 620);
          ctx.font = "32px Arial";
          let lastAction = `A ${this.getCurrentPlayingCard().color} ${this.getCurrentPlayingCard().value}`;
          if(this.getCurrentPlayingCard().value > 9) {
@@ -172,10 +171,10 @@ class gamemanager {
             if(this.getCurrentPlayingCard().value == 12) lastAction = "A draw 2 card";
          }
          if(this.started) {
-            ctx.fillText(`The starting card is a ${this.getCurrentPlayingCard().color} ${this.getCurrentPlayingCard().value}`, 150, 150);
+            ctx.fillText(`The starting card is a ${this.getCurrentPlayingCard().color} ${this.getCurrentPlayingCard().value}`, 170, 150);
 
          } else {
-            ctx.fillText(`${lastAction} was played`, 150, 150);
+            ctx.fillText(`${lastAction} was played`, 220, 150);
          }
 
          if(this.won) {

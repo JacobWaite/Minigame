@@ -6,10 +6,12 @@ class player {
         this.turnComplete = false;
         this.cardToPlay = null;
         this.played = false;
+        this.drawing = false;
+        //this.ableToPlay = false;
         this.turnTime = 0;
         this.image = ASSET_MANAGER.getAsset("./player.png");
 
-        console.log(`${x} ${y}`);
+        //console.log(`${x} ${y}`);
     }
 
     update() {
@@ -47,10 +49,10 @@ class player {
                 ctx.strokeRect(50,300,64,64);
                 ctx.strokeStyle = "black";
                 ctx.font = "16px Arial";
-
-                ctx.fillText(`Player 2 is playing`, 40, 400);
-                if(!this.canPlay()) {
-                    ctx.fillText(`Player 2 is drawing`, 40, 400);
+                if(this.drawing) {
+                    ctx.fillText(`Player 2 is drawing...`, 40, 400);
+                } else {
+                    ctx.fillText(`Player 2 is playing...`, 40, 400);
                 }
 
             }
@@ -60,10 +62,12 @@ class player {
                 ctx.strokeRect(350,10,64,64);
                 ctx.strokeStyle = "black";
                 ctx.font = "16px Arial";
-                ctx.fillText(`Player 3 is playing`, 320, 100);
-                if(!this.canPlay()) {
-                    ctx.fillText(`Player 3 is drawing`, 40, 400);
+                if(this.drawing) {
+                    ctx.fillText(`Player 3 is drawing...`, 320, 100);
+                } else {
+                    ctx.fillText(`Player 3 is playing...`, 320, 100);
                 }
+                
 
             }
 
@@ -73,10 +77,12 @@ class player {
                 ctx.strokeRect(650,300,64,64);
                 ctx.strokeStyle = "black";
                 ctx.font = "16px Arial";
-                ctx.fillText(`Player 4 is playing`, 630, 400);
-                if(!this.canPlay()) {
-                    ctx.fillText(`Player 4 is drawing`, 40, 400);
+                if(this.drawing) {
+                    ctx.fillText(`Player 4 is drawing...`, 620, 400);
+                } else {
+                    ctx.fillText(`Player 4 is playing...`, 620, 400);
                 }
+                
             }
         }
     
@@ -89,25 +95,28 @@ class player {
         let i = 0;
         let notFound = this.currentHand.length > 0;
         while(notFound) {
-            console.log(`Hand Length:  ${this.currentHand.length} i: ${i} `);
+            //console.log(`Hand Length:  ${this.currentHand.length} i: ${i} `);
 
             if(this.currentHand[i].color == card.color || this.currentHand[i].value == card.value) {
                 this.cardToPlay = this.currentHand.splice(i,1)[0];
-                console.log("card to play: " + this.cardToPlay);
+                //console.log("card to play: " + this.cardToPlay);
+                //this.ableToPlay = true;
                 return true;
             }
             i ++;
             notFound = i < this.currentHand.length;
 
         }
-
+        //this.ableToPay = false;
         return false;
     }
 
     play() {
         if(this.canPlay(this.game.manager.getCurrentPlayingCard())) {
+            this.drawing = false;
             this.game.manager.discard(this.cardToPlay);
         } else {
+            this.drawing = true;
             this.currentHand.push(this.game.manager.drawCard());
         }
         this.played = true;
