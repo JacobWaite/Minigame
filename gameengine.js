@@ -62,19 +62,32 @@ class GameEngine {
                    
                     if(player.buttons[i].collide()) {
                         let currentCard = player.currentHand[i];
-                        let currentPlayingCard = this.manager.discard[this.manager.discard.length - 1]
+                        let currentPlayingCard = this.manager.getCurrentPlayingCard();
                         if(currentCard.color == currentPlayingCard.color || currentCard.value == currentPlayingCard.value) {
-                            this.manager.discard.push(currentCard);
+                            this.manager.discard(currentCard);
                             player.currentHand.splice(i,1);
                             player.buttons.pop();
+                            player.turnComplete = true;
+                            player.turn = false;
                         }
                     }
                 }
         
                 if(player.drawButton.collide() && this.manager.deck.length > 0) {
-                    let currentCard = this.manager.deck.pop();
+                    let currentCard = this.manager.drawCard();
                     player.currentHand.push(currentCard);
                     player.buttons.push(new button(player, 100+(((player.buttons.length)*75)+15), 600, currentCard.width, currentCard.height, 1.5));
+                    player.cardsDrawn ++;
+                    if(!player.draw2) {
+                        player.turnComplete = true;
+                        player.turn = false;
+                    } else if(player.draw2 && player.cardsDrawn == 2) {
+                        player.turnComplete = true;
+                        player.turn = false;
+                        player.draw2 = false;
+                        player.cardsDrawn = 0;
+                    }
+                    
                 }
                 
             }
@@ -121,13 +134,12 @@ class GameEngine {
             this.entities[i].draw(this.ctx);
         }
         this.manager.draw(this.ctx);
-        this.ctx.fillText(this.click, 50,50);
-
         
     };
 
     update() {
         let entitiesCount = this.entities.length;
+        this.manager.update();
         for (let i = 0; i < entitiesCount; i++) {
             let entity = this.entities[i];
 

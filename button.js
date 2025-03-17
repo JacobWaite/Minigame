@@ -27,6 +27,9 @@ class button{
     disable() {
         this.enabled = false;
     }
+    enable() {
+        this.enabled = true;
+    }
 
     toString() {
         return "LeftBound: " + this.left + "TopBound: " + this.top + "RightBound: " + this.right + "BottomBound: " + this.bottom;
